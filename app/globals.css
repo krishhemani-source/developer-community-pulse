@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+/*
+  Design tokens. Colour carries meaning and nothing else:
+    rising  = warm (more pain)   falling = cool (less pain)   steady = muted neutral
+  Everything else is paper, ink and hairline rules.
+*/
+:root {
+  --paper: #f5f7fa;
+  --surface: #ffffff;
+  --ink: #14213d;
+  --muted: #5b6478;
+  --rule: #dde2ea;
+  --rising: #c2410c;
+  --rising-soft: #fbe9df;
+  --falling: #0e7490;
+  --falling-soft: #dff1f5;
+  --steady: #5b6478;
+  --focus: #14213d;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0d1424;
+    --surface: #131c30;
+    --ink: #e6eaf2;
+    --muted: #98a2b6;
+    --rule: #25304a;
+    --rising: #f08a52;
+    --rising-soft: #3a2116;
+    --falling: #4cc0d6;
+    --falling-soft: #102f38;
+    --steady: #98a2b6;
+    --focus: #e6eaf2;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-rising: var(--rising);
+  --color-rising-soft: var(--rising-soft);
+  --color-falling: var(--falling);
+  --color-falling-soft: var(--falling-soft);
+  --color-steady: var(--steady);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Numbers line up in columns everywhere. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Visible keyboard focus on everything interactive. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+a {
+  text-underline-offset: 3px;
+}
+
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
