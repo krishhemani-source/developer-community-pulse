@@ -11,19 +11,21 @@ import { DeltaMark, TONE_STROKE, TONE_TEXT, trendTone } from "./trend";
 
 export function PulseReadout({ topics }: { topics: TopicBrief[] }) {
   return (
-    <section aria-labelledby="pulse-heading">
-      <div className="flex items-baseline justify-between gap-4 border-b border-ink pb-2">
-        <h2 id="pulse-heading" className="text-lg font-semibold">
-          Pain points, ranked by mentions
-        </h2>
-        <p className="hidden text-xs text-muted sm:block">Count · change vs last week · last 4 weeks · resolution</p>
+    <div>
+      <div aria-hidden="true" className="hidden grid-cols-[2rem_minmax(0,1fr)_5rem_8.5rem_7rem_9rem] gap-x-3 border-b border-rule pb-2 text-xs text-muted md:grid">
+        <span>Rank</span>
+        <span>Topic</span>
+        <span>Mentions</span>
+        <span>vs last week</span>
+        <span>Last 4 weeks</span>
+        <span>Resolution</span>
       </div>
       <ol className="divide-y divide-rule">
         {topics.map((t) => (
           <PulseRow key={t.id} topic={t} />
         ))}
       </ol>
-    </section>
+    </div>
   );
 }
 

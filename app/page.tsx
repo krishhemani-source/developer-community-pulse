@@ -51,9 +51,12 @@ export default async function BriefPage() {
   return (
     <div className="flex flex-col gap-10">
       <header className="flex flex-col justify-between gap-4 border-b border-rule pb-6 sm:flex-row sm:items-start">
-        <div>
-          <h1 className="text-sm font-medium text-muted">This week&apos;s brief</h1>
-          <p className="tabular text-2xl font-semibold tracking-tight">{formatWeekRange(b.weekStart, b.weekEnd)}</p>
+        <div className="max-w-2xl">
+          <p className="text-sm font-medium text-muted">Weekly developer community brief</p>
+          <h1 className="tabular mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">{formatWeekRange(b.weekStart, b.weekEnd)}</h1>
+          <p className="mt-2 text-[15px] text-muted">
+            What developers on Hacker News, Stack Overflow, GitHub and Dev.to struggled with, how it is trending, and what is still unsolved.
+          </p>
           {lastRun && (
             <p className="tabular mt-1 text-sm text-muted">
               Last run {formatDateTime(lastRun.started_at, settings.timezone)} · {lastRun.trigger} ·{" "}

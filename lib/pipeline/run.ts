@@ -381,8 +381,8 @@ function assembleBrief(a: AssembleInput): BriefContent {
   for (const s of SOURCES) {
     if (!a.sourceStatus[s].ok) notes.push(`${SOURCE_LABELS[s]} was unavailable this week, so its discussions are missing from these counts.`);
   }
-  if (a.totals.droppedByCap > 0) notes.push(`${a.totals.droppedByCap} lower-engagement posts were left out to keep the run within its 400-post cap.`);
-  if (a.tagNotes.untaggedPosts > 0) notes.push(`${a.tagNotes.untaggedPosts} posts could not be tagged by Gemini and are not counted.`);
+  if (a.totals.droppedByCap > 0) notes.push(`${a.totals.droppedByCap} lower-engagement ${a.totals.droppedByCap === 1 ? "post was" : "posts were"} left out to keep the run within its 400-post cap.`);
+  if (a.tagNotes.untaggedPosts > 0) notes.push(`${a.tagNotes.untaggedPosts} ${a.tagNotes.untaggedPosts === 1 ? "post" : "posts"} could not be tagged by Gemini and ${a.tagNotes.untaggedPosts === 1 ? "is" : "are"} not counted.`);
   if (a.aiError) notes.push("Gemini could not write the summary this week; numbers and evidence are shown without commentary.");
   const report: VerifyReport | null = a.verified?.report ?? null;
 

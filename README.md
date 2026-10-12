@@ -181,27 +181,36 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
   1. Numbers before words.
   2. Colour means direction and nothing else, and always comes with an arrow and a label.
   3. Hairline rules instead of cards.
+- **Structure:** the page is organised as the answers to Sumit's three questions (sections 1–3), then sales objections and Monday talking points. A takeaway headline and four key numbers sit on top, so the first ten seconds already say what changed.
 - **The one memorable element** is the pulse readout: ranked rows with large tabular counts, direction-coloured deltas and 4-week sparklines.
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│ ~ Developer Pulse                       Brief  History  Run log  ⚙ │
+│ ~ Developer Pulse                     Brief  History  Run log  Set │
 ├────────────────────────────────────────────────────────────────────┤
-│ This week's brief                                     [ Run now ]  │
-│ 2–9 Oct 2026 · last run Fri 08:00 · Success   Collecting / ... /   │
+│ Weekly developer community brief                       [ Run now ] │
+│ 5–12 Oct 2026                                                      │
+│ What developers struggled with, how it is trending, what is unsolved│
 │                                                                    │
-│  False positives led the discussion this week, and developers      │
-│  say no tool filters them well.                         (serif)    │
+│ This week's takeaway                                               │
+│  AI code review tools and CI integration dominate developer        │
+│  discussion this week…                                  (serif)    │
+│ ┌────────────┬────────────┬────────────┬────────────┐              │
+│ │ 86         │ 2          │ 39%        │ 21         │  key numbers │
+│ │ discussions│ rising     │ unresolved │ objections │  (all code)  │
+│ └────────────┴────────────┴────────────┴────────────┘              │
+│ [1 What's surfacing] [2 What's moving] [3 Unsolved] [4 Sales] [5]  │
 │                                                                    │
-│ Pain points, ranked by mentions ────────────────────────────────── │
-│ 1  False positives…   14   ▲ +6 (+75%)   ╱‾╲_╱•   ███░░ 62% unres. │
-│    Rising 3 weeks in a row · insight · Show 5 source threads       │
-│ 2  CI/CD integration  11   – +1 Steady   ‾‾╲_•    ██░░░ 40%        │
-│ …                                                                  │
-│ Opportunity quadrant ──────────   Sales objection signals ──────── │
-│  ● bubbles, "Underserved" top-right   Noisy comments ………………… 6    │
-│ Monday talking points ──────────────────── [ Copy for Google Doc ] │
-│ ✓ Hacker News 60 · ✓ Stack Overflow 11 · ✓ GitHub 120 · ✓ Dev.to   │
+│ 1  What pain points are surfacing most? ────────────────────────── │
+│    1 AI code review tools  24  ▲ +3   ╱‾╲_•  ███░░ 32% unresolved   │
+│    … insight · Show 5 source threads                               │
+│ 2  What is moving week over week? ──────────────────────────────── │
+│    ▲ Rising: CI/CD 4 → 21  +17       ▼ Falling: …                  │
+│ 3  Which problems are still unsolved? ──────────────────────────── │
+│    quadrant ("Underserved" top right)  |  underserved + threads    │
+│ 4  What sales hears, developers are saying ─────────────────────── │
+│ 5  For Monday's sprint planning ──────────── [ Copy for Google Doc ]│
+│ How this was measured: sources, counts, verification                │
 └────────────────────────────────────────────────────────────────────┘
 ```
 
