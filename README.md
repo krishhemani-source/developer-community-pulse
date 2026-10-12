@@ -117,8 +117,9 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
   1. Every `evidence_id` must be one of the posts we actually sent, for that same topic or objection. Invalid ids are removed.
   2. Any item left with zero valid evidence is dropped.
   3. Any text containing a digit is dropped, because numbers may only come from code. If the headline fails this check, a code-written headline replaces it.
-  4. Unknown topic or objection ids are dropped.
-  5. The counts of what was dropped are saved in the run log and shown under the brief ("14 of 16 AI statements passed verification").
+  4. **Headline grounding.** Code computes the week's key facts (most discussed topic, biggest riser and faller, most unresolved topic, most echoed objection) and Gemini writes the headline from them. The headline must then name the most discussed or fastest-rising topic (`headlineMentionsAny`); if it does not, a code-written headline replaces it.
+  5. Unknown topic or objection ids are dropped.
+  6. The counts of what was dropped are saved in the run log and shown under the brief ("14 of 16 AI statements passed verification").
 - **Idempotent weeks.** Rerunning a week (any run whose window starts within 3 days of an existing week) replaces that week's tags, snapshots and brief. It never doubles them.
 - **Run lock.** A partial unique index (`runs_one_running`) lets the database itself refuse a second run while one is `running`. Runs stuck for over 6 minutes are marked failed, which releases the lock.
 
@@ -139,6 +140,7 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
 | Gemini overloaded (503) or rate-limited (429) | Waits (honouring Google's `retryDelay`), moves through the fallback Flash models in `GEMINI_FALLBACK_MODEL` (default `gemini-3.6-flash,gemini-3.5-flash-lite`), up to 5 attempts |
 | Gemini cites a post that does not exist | Verification removes the citation; items left without evidence are dropped |
 | Gemini writes a number | Verification drops that text |
+| Gemini's headline leads with the wrong thing | The headline must name the week's most discussed or fastest-rising topic, or a code-written headline is used |
 | Brand-new unanswered question | Posts under 48 hours old are `too_new` and excluded from the unresolved share |
 | Rerun in the same week | Replaces that week's data (weeks starting within 3 days are treated as the same week) |
 | Two runs at once, or button spam | Database-level "already running" lock, plus a 10-minute cooldown on manual runs |

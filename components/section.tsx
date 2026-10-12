@@ -20,20 +20,20 @@ export function BriefSection({
 }) {
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className={cn("scroll-mt-6", className)}>
-      <header className="grid grid-cols-[2.5rem_1fr] gap-x-3 border-t border-rule pt-6 sm:grid-cols-[3.25rem_1fr_auto] sm:items-start">
-        <span aria-hidden="true" className="tabular font-serif text-4xl leading-none text-accent sm:text-5xl">
-          {number}
-        </span>
+      <header className="flex flex-col gap-4 border-t border-rule pt-7 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 id={`${id}-heading`} className="text-xl font-semibold tracking-tight sm:text-2xl">
+          <p aria-hidden="true" className="tabular text-xs font-semibold tracking-wide text-accent">
+            {String(number).padStart(2, "0")}
+          </p>
+          <h2 id={`${id}-heading`} className="mt-1.5 text-[1.6rem] font-semibold leading-tight tracking-[-0.015em]">
             <span className="sr-only">{number}. </span>
             {question}
           </h2>
-          <p className="mt-1 max-w-2xl text-sm text-muted">{lead}</p>
+          <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted">{lead}</p>
         </div>
-        {aside && <div className="col-span-2 mt-3 sm:col-span-1 sm:mt-0">{aside}</div>}
+        {aside && <div className="shrink-0">{aside}</div>}
       </header>
-      <div className="mt-6">{children}</div>
+      <div className="mt-7">{children}</div>
     </section>
   );
 }

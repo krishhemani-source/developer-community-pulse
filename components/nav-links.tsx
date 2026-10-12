@@ -1,5 +1,5 @@
 "use client";
-import { Activity, History, LayoutDashboard, SlidersHorizontal } from "lucide-react";
+import { Activity, BookOpen, History, LayoutDashboard, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/history", label: "Brief archive", short: "Archive", icon: History },
   { href: "/runs", label: "Run log", short: "Runs", icon: Activity },
   { href: "/settings", label: "Settings", short: "Settings", icon: SlidersHorizontal },
+  { href: "/about", label: "How it works", short: "About", icon: BookOpen },
 ];
 
 export function NavLinks({ orientation, className }: { orientation: "vertical" | "horizontal"; className?: string }) {

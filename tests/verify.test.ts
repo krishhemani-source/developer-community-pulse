@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { RawBrief } from "@/lib/ai/schemas";
-import { type EvidenceRef, containsDigit, verifyBrief } from "@/lib/verify";
+import { type EvidenceRef, containsDigit, headlineMentionsAny, verifyBrief } from "@/lib/verify";
 
 const evidence = new Map<string, EvidenceRef>([
   ["e1", { topicId: 1, objectionId: 10 }],
@@ -123,5 +123,28 @@ describe("containsDigit", () => {
   it("detects digits", () => {
     expect(containsDigit("a1")).toBe(true);
     expect(containsDigit("no numbers here")).toBe(false);
+  });
+});
+
+describe("headline grounding", () => {
+  const names = ["AI code review tools", "Security and static analysis"];
+  it("accepts a headline that names a key topic, even paraphrased", () => {
+    expect(headlineMentionsAny("AI code review dominated discussion while noise complaints grew.", names)).toBe(true);
+    expect(headlineMentionsAny("Static analysis complaints are rising fastest this week.", names)).toBe(true);
+    expect(headlineMentionsAny("Artificial intelligence code review remained the top topic.", names)).toBe(true);
+  });
+  it("rejects a headline that names neither key topic", () => {
+    expect(headlineMentionsAny("Developers discussed many interesting things this week.", names)).toBe(false);
+    expect(headlineMentionsAny("Review culture and tools came up a lot.", names)).toBe(false);
+  });
+  it("replaces an ungrounded headline with the code-written one", () => {
+    const v = verifyBrief(raw({ headline: "Developers are busy this week." }), evidence, topics, objections, names);
+    expect(v.headline).toBeNull();
+    expect(v.report.headlineReplaced).toBe(true);
+    expect(v.report.headlineUngrounded).toBe(true);
+  });
+  it("keeps a grounded headline", () => {
+    const v = verifyBrief(raw({ headline: "Security and static analysis is rising while AI code review stays on top." }), evidence, topics, objections, names);
+    expect(v.headline).not.toBeNull();
   });
 });

@@ -17,7 +17,8 @@ export interface VerifyReport {
   itemsDroppedNoEvidence: number; // items left with zero valid evidence
   itemsDroppedDigits: number; // items whose text contained a digit
   itemsDroppedUnknownId: number; // topic or objection ids we never sent
-  headlineReplaced: boolean; // headline contained a digit, so a code-written one is used
+  headlineReplaced: boolean; // headline failed a check, so a code-written one is used
+  headlineUngrounded: boolean; // headline did not name the week's key topic(s)
 }
 
 export interface VerifiedBrief {
@@ -33,11 +34,38 @@ export function containsDigit(text: string): boolean {
   return /\d/.test(text);
 }
 
+/** Words too generic to prove a topic is named ("tools", "pain"...). Short acronyms like AI, CI, PR are kept. */
+const GENERIC_WORDS = new Set(["and", "the", "with", "for", "tools", "tool", "pain", "feedback", "quality", "culture", "integration"]);
+
+function significantWords(name: string): string[] {
+  return name
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((w) => (w.length >= 3 || ["ai", "ci", "cd", "pr", "prs"].includes(w)) && !GENERIC_WORDS.has(w));
+}
+
+/**
+ * True when the headline names at least one of the given topics: at least half of a topic's
+ * significant words appear in it (so "AI code review" counts for "AI code review tools").
+ */
+export function headlineMentionsAny(headline: string, topicNames: string[]): boolean {
+  if (topicNames.length === 0) return true;
+  const words = new Set(headline.toLowerCase().split(/[^a-z0-9]+/));
+  return topicNames.some((name) => {
+    const sig = significantWords(name);
+    if (sig.length === 0) return false;
+    const hits = sig.filter((w) => words.has(w)).length;
+    return hits >= Math.ceil(sig.length / 2);
+  });
+}
+
 export function verifyBrief(
   raw: RawBrief,
   evidence: Map<string, EvidenceRef>,
   validTopicIds: Set<number>,
   validObjectionIds: Set<number>,
+  /** The headline must name at least one of these topics (the most discussed and the biggest riser). */
+  headlineMustMention: string[] = [],
 ): VerifiedBrief {
   const report: VerifyReport = {
     itemsReceived: 0,
@@ -47,6 +75,7 @@ export function verifyBrief(
     itemsDroppedDigits: 0,
     itemsDroppedUnknownId: 0,
     headlineReplaced: false,
+    headlineUngrounded: false,
   };
 
   /** Keeps only ids that exist and match; counts the rest as removed. */
@@ -123,6 +152,11 @@ export function verifyBrief(
   if (headline === "" || containsDigit(headline)) {
     headline = null;
     report.headlineReplaced = true;
+  } else if (!headlineMentionsAny(headline, headlineMustMention)) {
+    // Gemini led with something other than the week's key topics: use the code-written headline.
+    headline = null;
+    report.headlineReplaced = true;
+    report.headlineUngrounded = true;
   }
 
   return { headline, topPainPoints, underserved, objectionSignals, talkingPoints, report };

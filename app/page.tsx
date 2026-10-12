@@ -83,17 +83,22 @@ export default async function BriefPage() {
   );
 }
 
-/** "SignalForge" with its descriptor and tagline; actions (Run now) on the right. */
+/**
+ * "SignalForge" with its descriptor and tagline; actions (Run now) on the right.
+ * Deliberately compact: the brief's headline, not the product name, is the most prominent text on the page.
+ */
 function DashboardHeader({ actions }: { actions?: React.ReactNode }) {
   return (
-    <header className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+    <header className="flex flex-col gap-4 border-b border-rule pb-6 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-ink">
-          <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
-          {BRAND.descriptor}
-        </p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{BRAND.name}</h1>
-        <p className="mt-2 text-[15px] text-muted">{BRAND.tagline}</p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <h1 className="text-2xl font-semibold tracking-[-0.02em]">{BRAND.name}</h1>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-2.5 py-0.5 text-xs font-medium">
+            <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
+            {BRAND.descriptor}
+          </span>
+        </div>
+        <p className="mt-1 text-sm text-muted">{BRAND.tagline}</p>
       </div>
       {actions}
     </header>

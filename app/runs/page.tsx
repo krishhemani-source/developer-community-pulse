@@ -158,7 +158,7 @@ function RunDetail({ run, timezone }: { run: RunRow; timezone: string }) {
               {v.itemsKept} of {v.itemsReceived} AI statements kept; <span className="font-medium">{removed} removed</span>
               <span className="block text-muted">
                 {v.itemsDroppedNoEvidence} without valid evidence · {v.itemsDroppedDigits} containing numbers · {v.itemsDroppedUnknownId} with unknown ids ·{" "}
-                {v.evidenceIdsRemoved} invalid citations stripped{v.headlineReplaced ? " · headline replaced by code" : ""}
+                {v.evidenceIdsRemoved} invalid citations stripped{v.headlineReplaced ? (v.headlineUngrounded ? " · headline replaced by code (it did not name the week\u2019s key topic)" : " · headline replaced by code") : ""}
               </span>
             </p>
           ) : (

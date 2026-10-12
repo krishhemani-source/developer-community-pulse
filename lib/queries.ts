@@ -113,6 +113,7 @@ export interface RunDetails {
     itemsDroppedDigits: number;
     itemsDroppedUnknownId: number;
     headlineReplaced: boolean;
+    headlineUngrounded?: boolean;
   } | null;
   aiError?: string | null;
   email?: string;
@@ -259,4 +260,44 @@ export interface ConfigChange {
 export async function recentConfigChanges(limit = 12): Promise<ConfigChange[]> {
   const rows = await query<ConfigChange>(`SELECT * FROM config_changes ORDER BY changed_at DESC LIMIT $1`, [limit]);
   return rows.map((r) => ({ ...r, changed_at: toIso(r.changed_at) }));
+}
+
+// ---------- System-wide numbers for "How it works" ----------
+
+export interface SystemStats {
+  runs: number;
+  succeeded: number;
+  partial: number;
+  failed: number;
+  postsFetched: number;
+  postsRelevant: number;
+  geminiCalls: number;
+  aiStatements: number;
+  aiStatementsKept: number;
+  citationsRemoved: number;
+  briefs: number;
+  topics: number;
+  keywords: number;
+  objections: number;
+}
+
+export async function getSystemStats(): Promise<SystemStats> {
+  const row = await queryOne<SystemStats>(
+    `SELECT
+       (SELECT count(*) FROM runs)::int AS runs,
+       (SELECT count(*) FROM runs WHERE status = 'success')::int AS succeeded,
+       (SELECT count(*) FROM runs WHERE status = 'partial')::int AS partial,
+       (SELECT count(*) FROM runs WHERE status = 'failed')::int AS failed,
+       (SELECT coalesce(sum(posts_fetched), 0) FROM runs)::int AS "postsFetched",
+       (SELECT count(*) FROM post_tags)::int AS "postsRelevant",
+       (SELECT coalesce(sum(gemini_calls), 0) FROM runs)::int AS "geminiCalls",
+       (SELECT coalesce(sum((content->'verification'->>'itemsReceived')::int), 0) FROM briefs)::int AS "aiStatements",
+       (SELECT coalesce(sum((content->'verification'->>'itemsKept')::int), 0) FROM briefs)::int AS "aiStatementsKept",
+       (SELECT coalesce(sum((content->'verification'->>'evidenceIdsRemoved')::int), 0) FROM briefs)::int AS "citationsRemoved",
+       (SELECT count(*) FROM briefs)::int AS briefs,
+       (SELECT count(*) FROM topics WHERE is_active)::int AS topics,
+       (SELECT count(*) FROM keywords WHERE is_active)::int AS keywords,
+       (SELECT count(*) FROM sales_objections WHERE is_active)::int AS objections`,
+  );
+  return row!;
 }

@@ -149,11 +149,11 @@ export function BriefView({ brief, markdown, meta }: { brief: BriefContent; mark
         aside={<CopyForDocButton markdown={markdown} />}
       >
         {brief.talkingPoints.length > 0 ? (
-          <ol className="grid gap-6 md:grid-cols-3">
+          <ol className="grid gap-x-10 gap-y-8 md:grid-cols-3">
             {brief.talkingPoints.map((p, i) => (
-              <li key={i} className="flex gap-3 rounded-md border border-rule bg-surface p-4">
-                <span className="tabular font-serif text-2xl leading-none text-muted">{i + 1}</span>
-                <p className="leading-relaxed">{p}</p>
+              <li key={i} className="border-t-2 border-accent/70 pt-4">
+                <span className="tabular text-xs font-semibold text-accent">Point {i + 1}</span>
+                <p className="mt-2 font-serif text-[1.15rem] leading-snug">{p}</p>
               </li>
             ))}
           </ol>

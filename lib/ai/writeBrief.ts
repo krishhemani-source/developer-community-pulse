@@ -17,7 +17,17 @@ export interface BriefTopicInput {
   top_posts: { id: string; title: string; pain_point: string; source: SourceName; objection_id: number | null }[];
 }
 
+/** The week's key facts, computed in code, that the headline must be built from. */
+export interface HeadlineFacts {
+  most_discussed: string | null;
+  biggest_riser: string | null;
+  biggest_faller: string | null;
+  most_unresolved: string | null;
+  most_echoed_objection: string | null;
+}
+
 export interface BriefInput {
+  headline_facts: HeadlineFacts;
   topics: BriefTopicInput[];
   objections: { objection_id: number; label: string; matching_posts: number }[];
   missing_sources: string[];
@@ -33,7 +43,10 @@ Hard rules:
 - Describe what developers say. Do not recommend what to build; Sumit decides that.
 
 Fields:
-- headline: two or three sentences with the single most important takeaway this week.
+- headline: two or three sentences, the single most important takeaway, built from headline_facts.
+  Sentence one: name the most discussed problem (headline_facts.most_discussed) and the most important change this week (headline_facts.biggest_riser if there is one, otherwise the biggest faller).
+  Sentence two: what this means for a company selling code review automation, for example how it echoes the most echoed sales objection or an unsolved problem. Describe; do not recommend what to build.
+  Use the topic names exactly as given so the reader can find them on the page.
 - top_pain_points: up to five topics with discussion, most important first. insight = one or two sentences on what developers are struggling with.
 - underserved: up to three topics that are both frequently discussed and mostly unresolved. why_unresolved = what is missing for developers.
 - objection_signals: for each sales objection with matching posts, what developers are saying in their own terms.

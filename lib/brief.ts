@@ -104,9 +104,16 @@ export function fallbackHeadline(topics: TopicBrief[]): string {
   const active = topics.filter((t) => t.mentionCount > 0);
   if (active.length === 0) return "No relevant developer discussion was found this week in the tracked communities.";
   const top = active[0];
-  const rising = active.filter((t) => t.trend === "rising" || t.trend === "new");
-  const risingText = rising.length > 0 ? ` Rising: ${rising.map((t) => t.name).join(", ")}.` : "";
-  return `${top.name} was the most discussed pain point this week with ${top.mentionCount} mentions.${risingText}`;
+  const riser = active
+    .filter((t) => t.trend === "rising" || t.trend === "new")
+    .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0))[0];
+  const unresolved = active
+    .filter((t) => t.unresolvedShare !== null && t.judgedCount >= 3)
+    .sort((a, b) => (b.unresolvedShare ?? 0) - (a.unresolvedShare ?? 0))[0];
+  const parts = [`${top.name} was the most discussed problem this week, with ${top.mentionCount} mentions.`];
+  if (riser && riser.id !== top.id) parts.push(`${riser.name} is rising fastest (${formatDelta(riser.delta, riser.pct)}).`);
+  if (unresolved) parts.push(`${unresolved.name} is the most unresolved, with ${formatShare(unresolved.unresolvedShare)} of judged threads still open.`);
+  return parts.join(" ");
 }
 
 /** Clean markdown for the "Copy for Google Doc" button. Numbers come from code. */

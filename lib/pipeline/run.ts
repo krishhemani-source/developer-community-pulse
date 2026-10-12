@@ -4,7 +4,7 @@
 //   collect -> clean -> tag (Gemini) -> measure (code) -> write (Gemini) -> verify (code) -> send
 import type { PostTag } from "../ai/tagPosts";
 import { tagPosts } from "../ai/tagPosts";
-import { writeBrief, type BriefInput } from "../ai/writeBrief";
+import { type BriefInput, type HeadlineFacts, writeBrief } from "../ai/writeBrief";
 import type { GeminiCounter } from "../ai/gemini";
 import { type BriefContent, type EvidencePost, briefToMarkdown, fallbackHeadline, streakText } from "../brief";
 import { collectAll } from "../collectors";
@@ -169,7 +169,13 @@ export async function runPipeline(opts: RunPipelineOptions): Promise<RunOutcome>
     // ---- 6. Verify (code) ----
     await enter("verifying");
     const verified = raw
-      ? verifyBrief(raw, evidenceMap, new Set(measures.filter((m) => m.stats.mentionCount > 0).map((m) => m.topic.id)), new Set(objections.map((o) => o.id)))
+      ? verifyBrief(
+          raw,
+          evidenceMap,
+          new Set(measures.filter((m) => m.stats.mentionCount > 0).map((m) => m.topic.id)),
+          new Set(objections.map((o) => o.id)),
+          [briefInput.headline_facts.most_discussed, briefInput.headline_facts.biggest_riser].filter((x): x is string => x !== null),
+        )
       : null;
     details.verification = verified?.report ?? null;
     details.aiError = aiError;
@@ -248,6 +254,28 @@ async function insertTags(runId: number, tags: PostTag[]): Promise<void> {
   }
 }
 
+/** The week's key facts, computed in code. The headline is written from these and checked against them. */
+export function headlineFacts(
+  measures: TopicMeasure[],
+  objections: { id: number; label: string }[],
+  counts: Map<number, number>,
+): HeadlineFacts {
+  const active = measures.filter((m) => m.stats.mentionCount > 0); // already ranked by mentions
+  const rising = active.filter((m) => m.change.label === "rising" || m.change.label === "new").sort((a, b) => (b.change.delta ?? 0) - (a.change.delta ?? 0));
+  const falling = active.filter((m) => m.change.label === "falling").sort((a, b) => (a.change.delta ?? 0) - (b.change.delta ?? 0));
+  const unresolved = active
+    .filter((m) => m.stats.unresolvedShare !== null && m.stats.judgedCount >= 3)
+    .sort((a, b) => (b.stats.unresolvedShare ?? 0) - (a.stats.unresolvedShare ?? 0) || b.stats.mentionCount - a.stats.mentionCount);
+  const echoed = [...objections].sort((a, b) => (counts.get(b.id) ?? 0) - (counts.get(a.id) ?? 0))[0];
+  return {
+    most_discussed: active[0]?.topic.name ?? null,
+    biggest_riser: rising[0]?.topic.name ?? null,
+    biggest_faller: falling[0]?.topic.name ?? null,
+    most_unresolved: unresolved[0]?.topic.name ?? null,
+    most_echoed_objection: echoed && (counts.get(echoed.id) ?? 0) > 0 ? echoed.label : null,
+  };
+}
+
 /** Builds Gemini's input: computed metrics plus the top 5 posts per topic under temporary ids. */
 function buildBriefInput(
   measures: TopicMeasure[],
@@ -260,6 +288,7 @@ function buildBriefInput(
   const counts = objectionCounts(measured);
   let n = 0;
   return {
+    headline_facts: headlineFacts(measures, objections, counts),
     topics: measures
       .filter((m) => m.stats.mentionCount > 0)
       .map((m) => ({
