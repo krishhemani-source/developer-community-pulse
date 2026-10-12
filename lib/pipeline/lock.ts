@@ -3,8 +3,8 @@ import { query, queryOne } from "../db";
 import type { WeekWindow } from "../weeks";
 
 export const COOLDOWN_MINUTES = 10;
-/** A run can last at most 5 minutes on Vercel. Anything "running" for longer has died. */
-export const STALE_MINUTES = 10;
+/** A run can last at most 5 minutes on Vercel. Anything "running" for 6+ minutes has died. */
+export const STALE_MINUTES = 6;
 
 export type Trigger = "cron" | "manual" | "backfill";
 

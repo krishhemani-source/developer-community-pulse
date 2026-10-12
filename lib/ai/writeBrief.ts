@@ -39,7 +39,7 @@ Fields:
 - objection_signals: for each sales objection with matching posts, what developers are saying in their own terms.
 - monday_talking_points: exactly three short points Sumit can raise in sprint planning.`;
 
-export async function writeBrief(input: BriefInput, counter: GeminiCounter): Promise<RawBrief> {
+export async function writeBrief(input: BriefInput, counter: GeminiCounter, deadline: number): Promise<RawBrief> {
   const prompt = `This week's computed metrics and evidence:\n\n${JSON.stringify(input)}`;
-  return generateJson({ system: SYSTEM, prompt, responseSchema: briefResponseSchema, validator: RawBriefSchema, counter });
+  return generateJson({ system: SYSTEM, prompt, responseSchema: briefResponseSchema, validator: RawBriefSchema, counter, deadline });
 }

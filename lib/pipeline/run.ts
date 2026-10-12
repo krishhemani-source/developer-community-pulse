@@ -22,8 +22,13 @@ import { type TopicMeasure, measureWeek, toMeasured } from "./measure";
 export const STAGES = ["collecting", "cleaning", "tagging", "measuring", "writing", "verifying", "sending"] as const;
 export type Stage = (typeof STAGES)[number] | "queued" | "done";
 
-/** Tagging stops starting new batches after this long, so the run finishes inside Vercel's 300s limit. */
-const TAGGING_DEADLINE_MS = 215_000;
+// Time budget inside Vercel's 300-second limit (measured from the start of the run):
+/** No new tagging batch starts after this. */
+const TAGGING_START_DEADLINE_MS = 165_000;
+/** Every tagging request must be finished by this. */
+const TAGGING_CALL_DEADLINE_MS = 220_000;
+/** Brief writing must be finished by this; afterwards the brief falls back to code-only text. */
+const WRITING_DEADLINE_MS = 280_000;
 
 export interface RunPipelineOptions {
   trigger: Trigger;
@@ -130,7 +135,7 @@ export async function runPipeline(opts: RunPipelineOptions): Promise<RunOutcome>
       })),
       topics,
       objections,
-      { counter, deadline: runStarted + TAGGING_DEADLINE_MS },
+      { counter, startDeadline: runStarted + TAGGING_START_DEADLINE_MS, callDeadline: runStarted + TAGGING_CALL_DEADLINE_MS },
     );
     details.tagging = { ...tagResult, tags: undefined };
     if (tagResult.failedBatches > 0 || tagResult.skippedBatches > 0) partial = true;
@@ -154,7 +159,7 @@ export async function runPipeline(opts: RunPipelineOptions): Promise<RunOutcome>
     let aiError: string | null = null;
     if (measured.length > 0) {
       try {
-        raw = await writeBrief(briefInput, counter);
+        raw = await writeBrief(briefInput, counter, runStarted + WRITING_DEADLINE_MS);
       } catch (err) {
         aiError = err instanceof Error ? err.message : String(err);
         partial = true;

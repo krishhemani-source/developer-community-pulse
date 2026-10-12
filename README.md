@@ -116,7 +116,7 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
   4. Unknown topic or objection ids are dropped.
   5. The counts of what was dropped are saved in the run log and shown under the brief ("14 of 16 AI statements passed verification").
 - **Idempotent weeks.** Rerunning a week (any run whose window starts within 3 days of an existing week) replaces that week's tags, snapshots and brief. It never doubles them.
-- **Run lock.** A partial unique index (`runs_one_running`) lets the database itself refuse a second run while one is `running`. Runs stuck for over 10 minutes are marked failed, which releases the lock.
+- **Run lock.** A partial unique index (`runs_one_running`) lets the database itself refuse a second run while one is `running`. Runs stuck for over 6 minutes are marked failed, which releases the lock.
 
 ## 6. Edge cases
 
@@ -137,11 +137,11 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
 | Rerun in the same week | Replaces that week's data (weeks starting within 3 days are treated as the same week) |
 | Two runs at once, or button spam | Database-level "already running" lock, plus a 10-minute cooldown on manual runs |
 | Vercel Cron runs on UTC | Scheduled at `30 2 * * 5` (02:30 UTC Friday = 08:00 IST); tested in `tests/weeks.test.ts` |
-| Function time limit | 400-post cap, batched calls, tagging stops starting new batches after 215s, one week per backfill request, `maxDuration = 300` |
+| Function time limit | 400-post cap, batched calls, tagging starts no new batch after 165s, every Gemini call has a hard deadline (tagging by 220s, writing by 280s), and the SDK's hidden retries are switched off, one week per backfill request, `maxDuration = 300` |
 | Zero relevant posts in a topic | Shown as "No discussion this week", not hidden |
 | Email fails | Brief is saved before sending; `email_status` is shown on the brief and in history |
 | Topic or keyword deleted mid-history | Soft delete with `is_active`; history and old briefs stay intact |
-| Function killed mid-run | The run is marked failed after 10 minutes with the stage it died in, which releases the lock |
+| Function killed mid-run | The run is marked failed after 6 minutes with the stage it died in, which releases the lock |
 
 ## 7. Data handling
 

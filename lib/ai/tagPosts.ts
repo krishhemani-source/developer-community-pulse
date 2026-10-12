@@ -77,7 +77,7 @@ export async function tagPosts(
   posts: TagInputPost[],
   topics: Topic[],
   objections: Objection[],
-  opts: { counter: GeminiCounter; deadline: number },
+  opts: { counter: GeminiCounter; startDeadline: number; callDeadline: number },
 ): Promise<TagResult> {
   const topicIds = new Set(topics.map((t) => t.id));
   const objectionIds = new Set(objections.map((o) => o.id));
@@ -100,7 +100,7 @@ export async function tagPosts(
   result.batches = batches.length;
 
   await mapLimit(batches, PARALLEL_BATCHES, async (batch, index) => {
-    if (Date.now() > opts.deadline) {
+    if (Date.now() > opts.startDeadline) {
       result.skippedBatches++;
       result.untaggedPosts += batch.length;
       result.log.push(`Batch ${index + 1}: skipped, run time budget reached.`);
@@ -115,6 +115,7 @@ export async function tagPosts(
           responseSchema: tagResponseSchema,
           validator: TagResponseSchema,
           counter: opts.counter,
+          deadline: opts.callDeadline,
         })
       ).items;
     } catch (err) {

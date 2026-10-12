@@ -47,7 +47,14 @@ interface GenerateJsonOptions<T> {
   responseSchema: Schema;
   validator: z.ZodType<T>;
   counter: GeminiCounter;
+  /** Epoch ms after which no new attempt starts and no request may still be running. */
+  deadline: number;
 }
+
+/** Below this much time left, a new Gemini attempt is not worth starting. */
+const MIN_ATTEMPT_MS = 8_000;
+/** Longest a single Gemini request may take. */
+const REQUEST_TIMEOUT_MS = 60_000;
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
@@ -82,6 +89,11 @@ export async function generateJson<T>(opts: GenerateJsonOptions<T>): Promise<T> 
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const model = models[modelIndex % models.length];
+    const remaining = opts.deadline - Date.now();
+    if (remaining < MIN_ATTEMPT_MS) {
+      lastError = `run time budget reached (${lastError})`;
+      break;
+    }
     try {
       opts.counter.calls++;
       const response = await getClient().models.generateContent({
@@ -92,6 +104,9 @@ export async function generateJson<T>(opts: GenerateJsonOptions<T>): Promise<T> 
           responseMimeType: "application/json",
           responseSchema: opts.responseSchema,
           temperature: 0.2,
+          // Our own loop does the retrying; the SDK's built-in retries are switched off so
+          // the total time stays predictable inside Vercel's 300-second limit.
+          httpOptions: { timeout: Math.min(REQUEST_TIMEOUT_MS, remaining), retryOptions: { attempts: 1 } },
         },
       });
       const text = response.text;
@@ -111,7 +126,9 @@ export async function generateJson<T>(opts: GenerateJsonOptions<T>): Promise<T> 
       const status = statusOf(err);
       if (status === 429 || status === 503 || status === 500) {
         modelIndex++; // try the next Flash model
-        await sleep(status === 429 ? retryDelayMs(err) : 2_000 * attempt);
+        const wait = status === 429 ? retryDelayMs(err) : 2_000 * attempt;
+        if (Date.now() + wait + MIN_ATTEMPT_MS > opts.deadline) break; // no time left to wait and retry
+        await sleep(wait);
         continue;
       }
       if (++badOutputs >= 2) break;
