@@ -46,6 +46,7 @@ Return one result for every post id you are given.
 
 Rules:
 - relevant is true ONLY if the post is about software development workflow in this problem space: code review, pull requests, CI/CD, automated checks, static analysis, developer tooling for reviewing or shipping code. A "review" of a movie or product, or an oil or sales "pipeline", is NOT relevant.
+- relevant is also false for machine-generated or administrative content: automated CI or monitoring reports, status/coordination/campaign boards, tracking or roadmap issues, release notes, changelogs, and bot or AI-agent task logs. Count only posts where a person describes a problem, a frustration, a question or an opinion.
 - topic_id must be one of the provided topic ids, or null when relevant is false or nothing fits.
 - pain_point: the developer's problem in at most 12 plain words. No hype, no emoji.
 - unresolved_signal is true when the author or replies describe a problem with no working solution, a workaround they dislike, or say no tool does this well.

@@ -10,7 +10,7 @@ const IssueSchema = z.object({
   html_url: z.string(),
   title: z.string(),
   body: z.string().nullish(),
-  user: z.object({ login: z.string() }).nullish(),
+  user: z.object({ login: z.string(), type: z.string().optional() }).nullish(),
   created_at: z.string(),
   state: z.string(),
   comments: z.number(),
@@ -20,6 +20,17 @@ const IssueSchema = z.object({
 });
 
 const ResponseSchema = z.object({ items: z.array(IssueSchema) });
+
+/** Titles of machine-generated issues: reports, dashboards, boards and trackers, not a person describing a problem. */
+const AUTOMATED_TITLE =
+  /\b(daily|weekly|nightly|monthly)\s+(report|summary|digest|run)\b|\bdependency dashboard\b|\b(status|coord|coordination|campaign|project|kanban|tracking)\s+board\b|^\[?(ci monitor|bot|auto(mated)?|renovate|dependabot|snyk)\b|\btracking issue\b|\brelease (notes|checklist)\b|^v?\d+\.\d+\.\d+ release\b/i;
+
+/** True for issues opened by bots or that are automated reports rather than developer discussion. */
+export function isAutomatedIssue(issue: { title: string; user?: { login: string; type?: string } | null }): boolean {
+  const login = issue.user?.login ?? "";
+  if (issue.user?.type === "Bot" || /\[bot\]$|-bot$|^bot-/i.test(login)) return true;
+  return AUTOMATED_TITLE.test(issue.title);
+}
 
 /** Total time GitHub collection may take, so the whole run fits inside Vercel's limit. */
 const TIME_BUDGET_MS = 60_000;
@@ -38,6 +49,7 @@ export async function collectGitHub(input: CollectorInput): Promise<CollectorRes
   let requests = 0;
   let failures = 0;
   let searched = 0;
+  let skippedAutomated = 0;
 
   for (const keyword of input.keywords) {
     if (Date.now() + spacingMs > deadline) {
@@ -67,6 +79,10 @@ export async function collectGitHub(input: CollectorInput): Promise<CollectorRes
       if (remaining !== null) quotaRemaining = Number(remaining);
       for (const issue of data.items) {
         if (issue.pull_request) continue; // belt and braces: issues only
+        if (isAutomatedIssue(issue)) {
+          skippedAutomated++;
+          continue;
+        }
         posts.push({
           source: "github",
           externalId: String(issue.id),
@@ -95,6 +111,7 @@ export async function collectGitHub(input: CollectorInput): Promise<CollectorRes
     }
   }
 
+  if (skippedAutomated > 0) warnings.push(`Skipped ${skippedAutomated} automated issues (bots, reports, status boards).`);
   if (requests > 0 && failures === requests) {
     throw new Error(`All ${failures} GitHub searches failed. First error: ${warnings[0]}`);
   }

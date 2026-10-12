@@ -9,7 +9,7 @@ import type { GeminiCounter } from "../ai/gemini";
 import { type BriefContent, type EvidencePost, briefToMarkdown, fallbackHeadline, streakText } from "../brief";
 import { collectAll } from "../collectors";
 import { SOURCE_LABELS, SOURCES, type SourceName, type SourceStatus } from "../collectors/types";
-import { loadConfig } from "../config";
+import { interleaveByTopic, loadConfig } from "../config";
 import { query } from "../db";
 import { appUrl, sendBriefEmail } from "../email/sendBrief";
 import { type MeasuredPost, byEngagement, objectionCounts, resolutionStatus } from "../metrics";
@@ -98,7 +98,7 @@ export async function runPipeline(opts: RunPipelineOptions): Promise<RunOutcome>
     // ---- 1. Collect ----
     await enter("collecting");
     const collected = await collectAll({
-      keywords: keywords.map((k) => k.phrase),
+      keywords: interleaveByTopic(keywords), // round-robin so partial searches still cover every topic
       devtoTags: settings.devto_tags,
       start: opts.window.start,
       end: opts.window.end,

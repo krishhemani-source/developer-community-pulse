@@ -74,7 +74,7 @@ The footer of every page and email says so: *This brief measures and explains. S
 | **zod** | Validates every API response and every Gemini output |
 | **Resend** | Delivers the email |
 | **Tailwind + shadcn/ui pattern + Recharts + lucide-react** | UI, the quadrant and trend charts, icons |
-| **vitest** | Unit tests for metrics, verification and week maths |
+| **vitest** | Unit tests for metrics, verification, week maths and content filters |
 
 ### Pipeline (`lib/pipeline/run.ts`)
 
@@ -126,6 +126,8 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
 | Small numbers exaggerate change | Percentage hidden when last week < `low_signal_threshold` (5); "Low signal" label when both weeks are below it |
 | Ambiguous keywords ("review" for movies, "pipeline" for oil) | Gemini relevance filter runs before anything is counted |
 | Same post from two keywords or sources | Deduplicated by (source, id), then by normalised URL |
+| Bots and automated reports inflate counts (CI daily reports, status boards, dependency dashboards) | GitHub issues from bot accounts or with report/board/tracker titles are dropped before tagging (`isAutomatedIssue`), and Gemini is told such content is irrelevant |
+| A rate-limited source only gets through part of the keyword list | Keywords are searched round-robin across topics (`interleaveByTopic`), so partial coverage is spread evenly instead of favouring the first topics |
 | A source is down or rate-limited | Run continues as `partial`; the brief notes the missing source; the source strip shows it failed |
 | Stack Exchange `backoff` / quota | Waits `backoff` seconds; stops before the quota runs out; logs `quota_remaining` |
 | GitHub search rate limit | Requests spaced 6.1s apart (2.1s with a token) inside a 60s budget; the log says how many keywords were searched |

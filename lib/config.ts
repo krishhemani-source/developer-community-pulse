@@ -79,3 +79,21 @@ export async function loadAllConfig(): Promise<Config> {
   ]);
   return { topics, keywords, objections, settings };
 }
+
+/**
+ * Orders keywords round-robin across topics: topic A's 1st, topic B's 1st, ... then everyone's 2nd.
+ * A rate-limited source (GitHub without a token) that only gets through part of the list
+ * then still covers every topic evenly, instead of only the first few topics.
+ */
+export function interleaveByTopic(keywords: Pick<Keyword, "topic_id" | "phrase">[]): string[] {
+  const byTopic = new Map<number, string[]>();
+  for (const k of keywords) {
+    if (!byTopic.has(k.topic_id)) byTopic.set(k.topic_id, []);
+    byTopic.get(k.topic_id)!.push(k.phrase);
+  }
+  const lists = [...byTopic.values()];
+  const longest = Math.max(0, ...lists.map((l) => l.length));
+  const out: string[] = [];
+  for (let i = 0; i < longest; i++) for (const list of lists) if (i < list.length) out.push(list[i]);
+  return out;
+}
