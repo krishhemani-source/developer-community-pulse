@@ -22,7 +22,7 @@ export async function sendBriefEmail(brief: BriefContent, recipientFromSettings:
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { status: "skipped: RESEND_API_KEY is not set", sent: false };
 
-  const from = process.env.RESEND_FROM?.trim() || "Developer Pulse <onboarding@resend.dev>";
+  const from = process.env.RESEND_FROM?.trim() || "SignalForge <onboarding@resend.dev>";
   const { subject, html } = renderBriefEmail(brief, appUrl());
 
   try {

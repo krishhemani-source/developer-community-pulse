@@ -30,7 +30,7 @@ export default async function SettingsPage() {
   return (
     <div className="flex flex-col gap-12">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-        <PageTitle title="Settings">Topics, keywords and objections live in the database. Changes apply from the next run, with no code change.</PageTitle>
+        <PageTitle title="Settings">The topics, keywords and sales objections SignalForge listens for. Changes apply from the next run, with no code change.</PageTitle>
         {locked && editable && <LockButton />}
       </div>
 

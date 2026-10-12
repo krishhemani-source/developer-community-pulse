@@ -1,4 +1,4 @@
-// Renders a saved brief, organised around Sumit's three questions.
+// Renders a saved Weekly Intelligence Brief, organised around Sumit's three questions.
 // Used by the main page and, read-only, by /history/[week].
 import { CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +13,7 @@ import { BriefSection } from "./section";
 import { SourceLabel } from "./source-icon";
 import { trendTone } from "./trend";
 
-export function BriefView({ brief, markdown }: { brief: BriefContent; markdown: string }) {
+export function BriefView({ brief, markdown, meta }: { brief: BriefContent; markdown: string; meta?: React.ReactNode }) {
   const points: QuadrantPoint[] = brief.topics
     .filter((t) => t.mentionCount > 0 && t.unresolvedShare !== null)
     .map((t) => ({
@@ -31,7 +31,7 @@ export function BriefView({ brief, markdown }: { brief: BriefContent; markdown: 
 
   return (
     <div className="flex flex-col gap-16">
-      <BriefHero brief={brief} />
+      <BriefHero brief={brief} meta={meta} />
 
       {brief.notes.length > 0 && (
         <aside aria-label="Notes about this week's data" className="-mt-8 border-l-2 border-rule pl-4 text-sm text-muted">
@@ -55,8 +55,8 @@ export function BriefView({ brief, markdown }: { brief: BriefContent; markdown: 
       <BriefSection
         id="moving"
         number={2}
-        question="What is moving week over week?"
-        lead="Change against last week's count, with the last four weeks drawn beside it. A streak means it has moved the same way several weeks running."
+        question="Emerging Signals"
+        lead="What is moving week over week: change against last week's count, with the last four weeks drawn beside it. A streak means a topic has moved the same way several weeks running."
       >
         <Movers topics={brief.topics} threshold={brief.lowSignalThreshold} />
       </BriefSection>

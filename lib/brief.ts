@@ -112,10 +112,10 @@ export function fallbackHeadline(topics: TopicBrief[]): string {
 /** Clean markdown for the "Copy for Google Doc" button. Numbers come from code. */
 export function briefToMarkdown(brief: BriefContent, dashboardUrl: string | null): string {
   const lines: string[] = [];
-  lines.push(`# Developer Community Pulse: ${formatWeekRange(brief.weekStart, brief.weekEnd)}`, "");
+  lines.push(`# SignalForge Weekly Intelligence Brief: ${formatWeekRange(brief.weekStart, brief.weekEnd)}`, "");
   lines.push(brief.headline, "");
 
-  lines.push("## Pain points this week", "");
+  lines.push("## Pain points surfacing this week", "");
   for (const t of brief.topics) {
     if (t.mentionCount === 0) {
       lines.push(`${t.rank}. **${t.name}**: no discussion this week`);
@@ -162,7 +162,7 @@ export function briefToMarkdown(brief: BriefContent, dashboardUrl: string | null
     lines.push("");
   }
 
-  if (dashboardUrl) lines.push(`Dashboard: ${dashboardUrl}`, "");
+  if (dashboardUrl) lines.push(`Open SignalForge: ${dashboardUrl}`, "");
   lines.push("_This brief measures and explains. Sprint decisions stay with you._");
   return lines.join("\n");
 }

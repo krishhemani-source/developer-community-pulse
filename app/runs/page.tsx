@@ -37,9 +37,9 @@ export default async function RunsPage() {
 
   return (
     <div>
-      <PageTitle title="Run log">Every collection run, newest first. Open a run to see stage timings, sources and verification.</PageTitle>
+      <PageTitle title="Run log">Every SignalForge collection run, newest first. Open a run to see stage timings, sources and verification.</PageTitle>
       {runs.length === 0 ? (
-        <p className="text-muted">No runs yet. Start one from the brief page with Run now or Build 4-week history.</p>
+        <p className="text-muted">No runs yet. Start one from the Intelligence Brief with Run now or Build 4-week history.</p>
       ) : (
         <ul className="divide-y divide-rule border-y border-rule">
           {runs.map((run) => (

@@ -6,7 +6,7 @@ export default function NotFound() {
       <h1 className="text-2xl font-semibold">Page not found</h1>
       <p className="mt-2 text-muted">That topic or week does not exist. It may have been typed wrongly in the address bar.</p>
       <Link href="/" className="mt-4 inline-block underline">
-        Go to this week&apos;s brief
+        Back to the Intelligence Brief
       </Link>
     </section>
   );

@@ -1,11 +1,12 @@
-// "/" This week's brief: the main screen.
+// "/" SignalForge dashboard: this week's Weekly Intelligence Brief.
 import { BackfillButton } from "@/components/backfill-button";
+import { BRAND, SignalMark } from "@/components/brand";
 import { BriefView } from "@/components/brief-view";
 import { RunControls } from "@/components/run-controls";
 import { LoadError } from "@/components/states";
 import { loadSettings } from "@/lib/config";
 import { countBriefWeeks, getLatestBrief, getRun, load } from "@/lib/queries";
-import { formatDateTime, formatWeekRange } from "@/lib/weeks";
+import { formatDateTime } from "@/lib/weeks";
 
 export const dynamic = "force-dynamic";
 // The "Run now" server action runs the pipeline after responding; give it Vercel's full 300 seconds.
@@ -27,12 +28,15 @@ export default async function BriefPage() {
 
   if (!brief) {
     return (
-      <div className="flex flex-col gap-8">
-        <section className="max-w-2xl">
-          <h1 className="font-serif text-3xl leading-tight tracking-tight">No brief yet. Build 4-week history to get started.</h1>
-          <p className="mt-3 text-muted">
-            This collects real posts from Hacker News, Stack Overflow, GitHub Issues and Dev.to for each of the last four weeks, one week at a
-            time, so the first brief can already say whether a problem has been growing for a month.
+      <div className="flex flex-col gap-10">
+        <DashboardHeader />
+        <section className="relative overflow-hidden rounded-2xl border border-rule bg-surface px-6 py-10 sm:px-10">
+          <SignalMark size={140} className="pointer-events-none absolute -right-6 -top-6 text-ink opacity-[0.06]" />
+          <p className="text-sm font-medium text-accent">{BRAND.brief}</p>
+          <h2 className="mt-2 max-w-xl font-serif text-3xl leading-tight tracking-tight">No brief yet. Build 4-week history to get started.</h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            SignalForge collects real posts from Hacker News, Stack Overflow, GitHub Issues and Dev.to for each of the last four weeks, one week at
+            a time, so your first brief can already say whether a problem has been growing for a month.
           </p>
           <div className="mt-6">
             <BackfillButton />
@@ -48,36 +52,50 @@ export default async function BriefPage() {
   }
 
   const b = brief.content;
+  const meta = (
+    <p className="tabular text-sm text-muted">
+      {lastRun ? (
+        <>
+          Last run {formatDateTime(lastRun.started_at, settings.timezone)} · {lastRun.trigger} ·{" "}
+          <span className={lastRun.status === "failed" ? "font-medium text-rising" : "text-ink"}>{STATUS_TEXT[lastRun.status]}</span>
+          {" · "}
+        </>
+      ) : null}
+      Email {brief.email_status.startsWith("failed") ? <span className="text-rising">{brief.email_status}</span> : brief.email_status.replace("_", " ")}
+    </p>
+  );
+
   return (
     <div className="flex flex-col gap-10">
-      <header className="flex flex-col justify-between gap-4 border-b border-rule pb-6 sm:flex-row sm:items-start">
-        <div className="max-w-2xl">
-          <p className="text-sm font-medium text-muted">Weekly developer community brief</p>
-          <h1 className="tabular mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">{formatWeekRange(b.weekStart, b.weekEnd)}</h1>
-          <p className="mt-2 text-[15px] text-muted">
-            What developers on Hacker News, Stack Overflow, GitHub and Dev.to struggled with, how it is trending, and what is still unsolved.
-          </p>
-          {lastRun && (
-            <p className="tabular mt-1 text-sm text-muted">
-              Last run {formatDateTime(lastRun.started_at, settings.timezone)} · {lastRun.trigger} ·{" "}
-              <span className={lastRun.status === "failed" ? "font-medium text-rising" : "text-ink"}>{STATUS_TEXT[lastRun.status]}</span>
-              {" · "}Email {brief.email_status.startsWith("failed") ? <span className="text-rising">{brief.email_status}</span> : brief.email_status.replace("_", " ")}
-            </p>
-          )}
-        </div>
-        <RunControls initialRun={runSummary} />
-      </header>
+      <DashboardHeader actions={<RunControls initialRun={runSummary} />} />
 
       {weeks < 4 && (
-        <section className="flex flex-col gap-3 border-l-2 border-ink pl-4 sm:flex-row sm:items-center sm:justify-between">
+        <section className="flex flex-col gap-3 rounded-xl border border-accent/30 bg-accent-soft px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm">
-            Only {weeks} {weeks === 1 ? "week" : "weeks"} of history so far. Build four weeks so trends and streaks mean something.
+            Only {weeks} {weeks === 1 ? "week" : "weeks"} of history so far. Build four weeks so Emerging Signals and streaks mean something.
           </p>
           <BackfillButton variant="outline" />
         </section>
       )}
 
-      <BriefView brief={b} markdown={brief.summary_markdown} />
+      <BriefView brief={b} markdown={brief.summary_markdown} meta={meta} />
     </div>
+  );
+}
+
+/** "SignalForge" with its descriptor and tagline; actions (Run now) on the right. */
+function DashboardHeader({ actions }: { actions?: React.ReactNode }) {
+  return (
+    <header className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+      <div>
+        <p className="inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-ink">
+          <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
+          {BRAND.descriptor}
+        </p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{BRAND.name}</h1>
+        <p className="mt-2 text-[15px] text-muted">{BRAND.tagline}</p>
+      </div>
+      {actions}
+    </header>
   );
 }

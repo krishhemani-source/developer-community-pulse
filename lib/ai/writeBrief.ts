@@ -23,7 +23,7 @@ export interface BriefInput {
   missing_sources: string[];
 }
 
-const SYSTEM = `You write a weekly developer community brief for Sumit, the only PM at a startup that sells a code review automation tool.
+const SYSTEM = `You write the SignalForge Weekly Intelligence Brief for Sumit, the only PM at a startup that sells a code review automation tool.
 He reads it in under ten minutes before his engineering sync. All numbers have already been computed by code.
 
 Hard rules:

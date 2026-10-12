@@ -5,7 +5,7 @@ import { listBriefs, load } from "@/lib/queries";
 import { formatWeekRange } from "@/lib/weeks";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "History" };
+export const metadata = { title: "Brief archive" };
 
 export default async function HistoryPage() {
   const result = await load(listBriefs);
@@ -14,12 +14,12 @@ export default async function HistoryPage() {
 
   return (
     <div>
-      <PageTitle title="Past briefs">Every weekly brief, exactly as it was generated. Open one to read it.</PageTitle>
+      <PageTitle title="Brief archive">Every Weekly Intelligence Brief, exactly as SignalForge generated it. Open one to read it.</PageTitle>
       {briefs.length === 0 ? (
         <p className="text-muted">
-          No briefs yet. Go to the{" "}
+          No Weekly Intelligence Briefs yet. Go to the{" "}
           <Link href="/" className="underline">
-            brief page
+            dashboard
           </Link>{" "}
           and build 4-week history to get started.
         </p>

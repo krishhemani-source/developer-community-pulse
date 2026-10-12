@@ -20,7 +20,7 @@ export function TopicTrendChart({ data }: { data: { week_start: string; mention_
             contentStyle={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 6, fontSize: 12, color: "var(--ink)" }}
             formatter={(value, name) => [name === "unresolved" ? `${value}%` : value, name === "unresolved" ? "Unresolved share" : "Mentions"]}
           />
-          <Line type="linear" dataKey="mentions" stroke="var(--ink)" strokeWidth={2} dot={{ r: 3, fill: "var(--ink)" }} isAnimationActive={false} />
+          <Line type="linear" dataKey="mentions" stroke="var(--accent)" strokeWidth={2} dot={{ r: 3, fill: "var(--accent)" }} isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

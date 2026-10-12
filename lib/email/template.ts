@@ -4,9 +4,10 @@ import { type BriefContent, TREND_TEXT, formatDelta, formatShare, streakText, tr
 import { SOURCE_LABELS } from "../collectors/types";
 import { formatWeekRange } from "../weeks";
 
-const INK = "#14213D";
-const MUTED = "#5B6478";
-const RULE = "#DDE2EA";
+const INK = "#0E1020";
+const MUTED = "#5F6273";
+const RULE = "#E7E3DB";
+const ACCENT = "#6B45FF";
 const RISING = "#C2410C";
 const FALLING = "#0E7490";
 
@@ -22,7 +23,7 @@ function trendColor(label: string): string {
 
 export function renderBriefEmail(brief: BriefContent, dashboardUrl: string | null): { subject: string; html: string } {
   const range = formatWeekRange(brief.weekStart, brief.weekEnd);
-  const subject = `Developer pulse, ${range}`;
+  const subject = `SignalForge · Weekly Intelligence Brief, ${range}`;
   const h2 = (t: string) =>
     `<h2 style="font-size:16px;margin:28px 0 8px;color:${INK};border-bottom:1px solid ${RULE};padding-bottom:6px">${esc(t)}</h2>`;
   const link = (title: string, url: string, source: string) =>
@@ -71,18 +72,19 @@ export function renderBriefEmail(brief: BriefContent, dashboardUrl: string | nul
   const points = brief.talkingPoints.map((p) => `<li style="margin:6px 0">${esc(p)}</li>`).join("");
   const notes = brief.notes.map((n) => `<li>${esc(n)}</li>`).join("");
 
-  const html = `<!doctype html><html><body style="margin:0;background:#F5F7FA">
+  const html = `<!doctype html><html><body style="margin:0;background:#FAF8F4">
   <div style="max-width:640px;margin:0 auto;padding:24px 20px;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:${INK};font-size:15px;line-height:1.5">
-    <div style="color:${MUTED};font-size:13px">Developer Community Pulse · ${esc(range)}</div>
+    <div style="font-size:15px;font-weight:600;letter-spacing:-0.01em"><span style="color:${ACCENT}">&#9673;</span>&nbsp;Signal<span style="color:${ACCENT}">Forge</span> <span style="color:${MUTED};font-weight:400;font-size:12px">Developer Intelligence</span></div>
+    <div style="color:${ACCENT};font-size:13px;font-weight:600;margin-top:18px">Weekly Intelligence Brief · <span style="color:${INK};font-weight:500">${esc(range)}</span></div>
     <p style="font-family:Georgia,serif;font-size:21px;line-height:1.35;margin:10px 0 0">${esc(brief.headline)}</p>
-    ${h2("Pain points, ranked by mentions")}
+    ${h2("What pain points are surfacing most")}
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${rows}</table>
     ${underserved ? `${h2("Underserved: frequent and mostly unresolved")}<ul style="padding-left:18px">${underserved}</ul>` : ""}
     ${objections ? `${h2("Sales objection signals")}<ul style="padding-left:18px">${objections}</ul>` : ""}
     ${points ? `${h2("Monday talking points")}<ol style="padding-left:18px">${points}</ol>` : ""}
     ${notes ? `<ul style="color:${MUTED};font-size:13px;padding-left:18px;margin-top:20px">${notes}</ul>` : ""}
-    ${dashboardUrl ? `<p style="margin-top:24px"><a href="${esc(dashboardUrl)}" style="color:${INK};font-weight:600">Open the dashboard</a></p>` : ""}
-    <p style="color:${MUTED};font-size:12px;margin-top:24px;border-top:1px solid ${RULE};padding-top:10px">This brief measures and explains. Sprint decisions stay with you.</p>
+    ${dashboardUrl ? `<p style="margin-top:24px"><a href="${esc(dashboardUrl)}" style="display:inline-block;background:${ACCENT};color:#ffffff;font-weight:600;text-decoration:none;padding:10px 16px;border-radius:8px">Open SignalForge</a></p>` : ""}
+    <p style="color:${MUTED};font-size:12px;margin-top:24px;border-top:1px solid ${RULE};padding-top:10px">This brief measures and explains. Sprint decisions stay with you.<br>SignalForge · Turn developer noise into product direction.</p>
   </div></body></html>`;
 
   return { subject, html };

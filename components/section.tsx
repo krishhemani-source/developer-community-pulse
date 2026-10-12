@@ -20,8 +20,8 @@ export function BriefSection({
 }) {
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className={cn("scroll-mt-6", className)}>
-      <header className="grid grid-cols-[2.5rem_1fr] gap-x-3 border-t-2 border-ink pt-5 sm:grid-cols-[3.25rem_1fr_auto] sm:items-start">
-        <span aria-hidden="true" className="tabular font-serif text-4xl leading-none text-muted sm:text-5xl">
+      <header className="grid grid-cols-[2.5rem_1fr] gap-x-3 border-t border-rule pt-6 sm:grid-cols-[3.25rem_1fr_auto] sm:items-start">
+        <span aria-hidden="true" className="tabular font-serif text-4xl leading-none text-accent sm:text-5xl">
           {number}
         </span>
         <div>

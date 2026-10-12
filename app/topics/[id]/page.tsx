@@ -13,6 +13,7 @@ import { getTopicDetail, load } from "@/lib/queries";
 import { formatWeekRange, shortDate } from "@/lib/weeks";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Topic signal" };
 
 const selectClass = "h-9 rounded-md border border-rule bg-surface px-2 text-sm text-ink";
 
@@ -53,7 +54,7 @@ export default async function TopicPage({
     <div className="flex flex-col gap-12">
       <div>
         <Link href="/" className="text-sm text-muted hover:text-ink">
-          Back to the brief
+          Back to the Intelligence Brief
         </Link>
         <div className="mt-3">
           <PageTitle title={topic.name}>
@@ -88,7 +89,7 @@ export default async function TopicPage({
             <TopicTrendChart data={snapshots} />
           </div>
         ) : (
-          <p className="mt-4 text-sm text-muted">No weeks measured yet. Run the pipeline or build history from the brief page.</p>
+          <p className="mt-4 text-sm text-muted">No weeks measured yet. Run the pipeline or build history from the Intelligence Brief.</p>
         )}
       </section>
 

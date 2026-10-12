@@ -82,7 +82,7 @@ export async function fetchJson<T>(
 ): Promise<{ data: T; headers: Headers }> {
   const res = await fetch(url, {
     ...init,
-    headers: { "User-Agent": "developer-community-pulse/1.0", Accept: "application/json", ...init.headers },
+    headers: { "User-Agent": "SignalForge/1.0 (developer intelligence brief)", Accept: "application/json", ...init.headers },
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     cache: "no-store",
   });

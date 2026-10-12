@@ -1,4 +1,4 @@
--- Developer Community Pulse: database schema (Neon Postgres).
+-- SignalForge: database schema (Neon Postgres).
 -- Safe to run repeatedly: every statement uses IF NOT EXISTS.
 -- Statements are separated by semicolons at line end; scripts/migrate.ts runs them one by one.
 

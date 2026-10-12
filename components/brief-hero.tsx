@@ -1,13 +1,15 @@
-// The top of the brief: the one takeaway, four numbers that frame the week, and a section index.
+// The Weekly Intelligence Brief header card: the week, the one takeaway, four numbers that frame it, and a section index.
 // Every number here is computed in code from the saved brief; the headline is Gemini's verified text.
 import Link from "next/link";
 import { type BriefContent, formatDelta, formatShare } from "@/lib/brief";
 import { cn } from "@/lib/utils";
+import { formatWeekRange } from "@/lib/weeks";
+import { BRAND } from "./brand";
 import { TONE_TEXT, TrendIcon } from "./trend";
 
 export const BRIEF_SECTIONS = [
   { id: "surfacing", label: "What's surfacing" },
-  { id: "moving", label: "What's moving" },
+  { id: "moving", label: "Emerging signals" },
   { id: "unsolved", label: "What's unsolved" },
   { id: "sales", label: "What sales hears" },
   { id: "monday", label: "For Monday" },
@@ -33,22 +35,28 @@ export function heroStats(brief: BriefContent) {
   return { total, totalDelta, totalPct, rising, mostUnresolved, objectionPosts, objectionsHit, activeTopics: active.length };
 }
 
-export function BriefHero({ brief }: { brief: BriefContent }) {
+export function BriefHero({ brief, meta }: { brief: BriefContent; meta?: React.ReactNode }) {
   const s = heroStats(brief);
   const totalTrend = s.totalDelta === null ? "no history" : s.totalDelta > 0 ? "rising" : s.totalDelta < 0 ? "falling" : "steady";
 
   return (
-    <section aria-labelledby="takeaway-heading" className="flex flex-col gap-8">
-      <div>
-        <h2 id="takeaway-heading" className="text-sm font-medium text-muted">
-          This week&apos;s takeaway
-        </h2>
-        <p className="mt-2 max-w-4xl font-serif text-[1.75rem] leading-[1.25] tracking-tight text-balance sm:text-[2.35rem]">
+    <section aria-labelledby="brief-heading" className="flex flex-col gap-8">
+      <div className="relative overflow-hidden rounded-2xl border border-rule bg-surface px-5 py-6 sm:px-8 sm:py-8">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full border border-accent/15" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-10 size-44 rounded-full border border-accent/20" />
+        <div className="relative flex flex-col gap-1">
+          <h2 id="brief-heading" className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-sm font-semibold text-accent">{BRAND.brief}</span>
+            <span className="tabular text-base font-semibold text-ink">{formatWeekRange(brief.weekStart, brief.weekEnd)}</span>
+          </h2>
+          {meta}
+        </div>
+        <p className="relative mt-5 max-w-4xl font-serif text-[1.75rem] leading-[1.25] tracking-tight text-balance sm:text-[2.3rem]">
           {brief.headline}
         </p>
       </div>
 
-      <dl className="grid grid-cols-2 border-y border-rule lg:grid-cols-4">
+      <dl className="grid grid-cols-2 rounded-2xl border border-rule bg-surface px-5 sm:px-6 lg:grid-cols-4">
         <Stat label="Relevant discussions" href="#surfacing">
           <span className="tabular text-4xl font-semibold leading-none tracking-tight">{s.total}</span>
           <span className={cn("tabular mt-2 inline-flex items-center gap-0.5 text-sm font-medium", s.totalDelta === null ? "text-muted" : TONE_TEXT[totalTrend === "rising" ? "rising" : totalTrend === "falling" ? "falling" : "steady"])}>

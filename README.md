@@ -1,6 +1,10 @@
-# Developer Community Pulse
+# SignalForge
 
-A weekly developer-community intelligence brief for Sumit, the only PM at a 15-person startup that sells a code review automation tool. Every Friday at 08:00 IST it reads Hacker News, Stack Overflow, GitHub Issues and Dev.to. It counts which pain points are surfacing, tracks how they trend week over week, finds problems nobody has solved, and emails a brief he can read in under ten minutes.
+**Developer Intelligence. Turn developer noise into product direction.**
+
+SignalForge produces a Weekly Intelligence Brief for Sumit, the only PM at a 15-person startup that sells a code review automation tool. Every Friday at 08:00 IST it reads Hacker News, Stack Overflow, GitHub Issues and Dev.to. It counts which pain points are surfacing, tracks how they trend week over week, finds problems nobody has solved, and emails a brief he can read in under ten minutes.
+
+_The repository, Vercel project and package keep the original working name `developer-community-pulse`; the product name everywhere a user sees it is SignalForge._
 
 > **AI interprets, code counts, nothing unverified reaches Sumit.**
 
@@ -173,11 +177,14 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
 - Counts answer "how often", trends answer "is it growing", and resolution status answers "does anyone solve it yet". That last one is the opportunity signal a PM needs.
 - All three are deterministic, testable and explainable in one sentence.
 
-**Visual design.** The goal is a calm research instrument, not a marketing site.
+**Brand and visual design.** SignalForge is positioned as a premium developer intelligence product: calm, precise and restrained, closer to a research instrument than a marketing site.
+- **Mark:** two concentric signal rings around a central point (`components/brand.tsx`, favicon `app/icon.svg`). The outer ring is broken, like a signal being picked up; the centre point, in electric violet, is the one thing worth acting on.
 - **Tokens:**
-  - Paper `#F5F7FA`, ink `#14213D`, muted `#5B6478`, rule `#DDE2EA`.
-  - Rising `#C2410C` (warm) and falling `#0E7490` (cool). Steady is muted grey.
+  - Warm white `#FAF8F4`, deep ink `#0E1020`, muted `#5F6273`, rule `#E7E3DB`.
+  - Electric violet `#6B45FF` is the only brand accent: the mark, primary actions, active navigation, section numbers and focus rings.
+  - Data colour carries meaning only: rising `#C2410C` (warm), falling `#0E7490` (cool), steady muted. Violet is never used for data.
   - A dark mode remaps each token.
+- **Vocabulary:** the AI report is the **Weekly Intelligence Brief**; the trend section is **Emerging Signals**.
 - **Typefaces:** Inter with tabular figures for everything; Newsreader (serif) only for the headline.
 - **Principles:**
   1. Numbers before words.
@@ -188,25 +195,25 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│ ~ Developer Pulse                     Brief  History  Run log  Set │
+│ ◎ SignalForge  (sidebar: Intelligence Brief · Archive · Runs · ⚙) │
 ├────────────────────────────────────────────────────────────────────┤
-│ Weekly developer community brief                       [ Run now ] │
-│ 5–12 Oct 2026                                                      │
-│ What developers struggled with, how it is trending, what is unsolved│
+│ Developer Intelligence                                 [ Run now ] │
+│ SignalForge                                                        │
+│ Turn developer noise into product direction.                       │
 │                                                                    │
-│ This week's takeaway                                               │
+│ Weekly Intelligence Brief · 5–12 Oct 2026          last run · email│
 │  AI code review tools and CI integration dominate developer        │
 │  discussion this week…                                  (serif)    │
 │ ┌────────────┬────────────┬────────────┬────────────┐              │
 │ │ 86         │ 2          │ 39%        │ 21         │  key numbers │
 │ │ discussions│ rising     │ unresolved │ objections │  (all code)  │
 │ └────────────┴────────────┴────────────┴────────────┘              │
-│ [1 What's surfacing] [2 What's moving] [3 Unsolved] [4 Sales] [5]  │
+│ [1 What's surfacing] [2 Emerging] [3 Unsolved] [4 Sales] [5]  │
 │                                                                    │
 │ 1  What pain points are surfacing most? ────────────────────────── │
 │    1 AI code review tools  24  ▲ +3   ╱‾╲_•  ███░░ 32% unresolved   │
 │    … insight · Show 5 source threads                               │
-│ 2  What is moving week over week? ──────────────────────────────── │
+│ 2  Emerging Signals ─────────────────────────────────────────────── │
 │    ▲ Rising: CI/CD 4 → 21  +17       ▼ Falling: …                  │
 │ 3  Which problems are still unsolved? ──────────────────────────── │
 │    quadrant ("Underserved" top right)  |  underserved + threads    │

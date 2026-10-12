@@ -1,38 +1,48 @@
 @import "tailwindcss";
 
 /*
-  Design tokens. Colour carries meaning and nothing else:
-    rising  = warm (more pain)   falling = cool (less pain)   steady = muted neutral
-  Everything else is paper, ink and hairline rules.
+  SignalForge design tokens.
+  Brand: deep ink on warm white, with electric violet as the single brand accent
+  (logo, primary actions, active navigation, focus).
+  Data colour carries meaning and nothing else:
+    rising = warm (more pain)   falling = cool (less pain)   steady = muted neutral
 */
 :root {
-  --paper: #f5f7fa;
+  --paper: #faf8f4; /* warm white */
   --surface: #ffffff;
-  --ink: #14213d;
-  --muted: #5b6478;
-  --rule: #dde2ea;
+  --ink: #0e1020; /* deep ink */
+  --muted: #5f6273;
+  --rule: #e7e3db;
+  --accent: #6b45ff; /* electric violet */
+  --accent-strong: #5530ef;
+  --accent-soft: #efeaff;
+  --on-accent: #ffffff;
   --rising: #c2410c;
   --rising-soft: #fbe9df;
   --falling: #0e7490;
   --falling-soft: #dff1f5;
-  --steady: #5b6478;
-  --focus: #14213d;
+  --steady: #5f6273;
+  --focus: #6b45ff;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #0d1424;
-    --surface: #131c30;
-    --ink: #e6eaf2;
-    --muted: #98a2b6;
-    --rule: #25304a;
+    --paper: #0a0b15;
+    --surface: #121429;
+    --ink: #eceaf4;
+    --muted: #9b9db2;
+    --rule: #24263f;
+    --accent: #9a7cff;
+    --accent-strong: #ae95ff;
+    --accent-soft: #211b45;
+    --on-accent: #0a0b15;
     --rising: #f08a52;
     --rising-soft: #3a2116;
     --falling: #4cc0d6;
     --falling-soft: #102f38;
-    --steady: #98a2b6;
-    --focus: #e6eaf2;
+    --steady: #9b9db2;
+    --focus: #9a7cff;
     color-scheme: dark;
   }
 }
@@ -43,6 +53,10 @@
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
   --color-rising: var(--rising);
   --color-rising-soft: var(--rising-soft);
   --color-falling: var(--falling);
@@ -73,11 +87,15 @@ body {
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 a {
   text-underline-offset: 3px;
+}
+
+::selection {
+  background: var(--accent-soft);
 }
 
 details > summary {
