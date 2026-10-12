@@ -91,7 +91,7 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
    - Keep the 400 highest-engagement posts.
    - Upsert into `posts`.
 3. **Tag** (`lib/ai/tagPosts.ts`):
-   - Batches of 25, at most 2 in parallel (the spec allows 3; 2 avoids free-tier rate limits), with structured JSON output.
+   - Batches of 25, at most 3 in parallel, with structured JSON output.
    - Tags with `relevant = false` or `confidence < 0.5` are dropped.
 4. **Measure** (`lib/metrics.ts`, `lib/pipeline/measure.ts`): mentions, engagement, resolution status, week-over-week change, trend label, streak, underserved score and objection counts. Results are written to `weekly_snapshots`.
 5. **Write** (`lib/ai/writeBrief.ts`): Gemini gets only the computed metrics and the top 5 posts per topic, and is told to write no numbers.
@@ -128,9 +128,9 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
 | Same post from two keywords or sources | Deduplicated by (source, id), then by normalised URL |
 | A source is down or rate-limited | Run continues as `partial`; the brief notes the missing source; the source strip shows it failed |
 | Stack Exchange `backoff` / quota | Waits `backoff` seconds; stops before the quota runs out; logs `quota_remaining` |
-| GitHub search rate limit | Requests spaced 6.1s apart (2.1s with a token) inside an 80s budget; the log says how many keywords were searched |
+| GitHub search rate limit | Requests spaced 6.1s apart (2.1s with a token) inside a 60s budget; the log says how many keywords were searched |
 | Gemini returns broken JSON | zod validation, one retry, then the batch is skipped and logged |
-| Gemini overloaded (503) or rate-limited (429) | Waits (honouring Google's `retryDelay`), moves through the fallback Flash models in `GEMINI_FALLBACK_MODEL` (default `gemini-3.6-flash,gemini-3.5-flash-lite`), up to 5 attempts; tagging runs at most 2 batches in parallel |
+| Gemini overloaded (503) or rate-limited (429) | Waits (honouring Google's `retryDelay`), moves through the fallback Flash models in `GEMINI_FALLBACK_MODEL` (default `gemini-3.6-flash,gemini-3.5-flash-lite`), up to 5 attempts |
 | Gemini cites a post that does not exist | Verification removes the citation; items left without evidence are dropped |
 | Gemini writes a number | Verification drops that text |
 | Brand-new unanswered question | Posts under 48 hours old are `too_new` and excluded from the unresolved share |

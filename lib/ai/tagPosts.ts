@@ -7,7 +7,7 @@ import { type GeminiCounter, generateJson } from "./gemini";
 import { TagResponseSchema, tagResponseSchema } from "./schemas";
 
 export const BATCH_SIZE = 25;
-export const PARALLEL_BATCHES = 2; // spec allows up to 3; 2 avoids free-tier rate-limit bursts
+export const PARALLEL_BATCHES = 3;
 export const MIN_CONFIDENCE = 0.5;
 
 /** The fields we are allowed to send. Deliberately no author, no URL, no ids from the source. */

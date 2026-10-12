@@ -22,7 +22,7 @@ const IssueSchema = z.object({
 const ResponseSchema = z.object({ items: z.array(IssueSchema) });
 
 /** Total time GitHub collection may take, so the whole run fits inside Vercel's limit. */
-const TIME_BUDGET_MS = 80_000;
+const TIME_BUDGET_MS = 60_000;
 
 function isoDate(d: Date): string {
   return d.toISOString().slice(0, 19) + "Z";
