@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Newsreader } from "next/font/google";
 import { BRAND, SignalMark, Wordmark } from "@/components/brand";
 import { NavLinks } from "@/components/nav-links";
+import { SignalPing } from "@/components/signal-ping";
 import { ToastProvider } from "@/components/toast";
 import "./globals.css";
 
@@ -36,10 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <NavLinks orientation="vertical" className="mt-10" />
               <div className="mt-auto space-y-3 border-t border-rule px-2 pt-5 text-xs text-muted">
                 <p className="flex items-center gap-2">
-                  <span className="relative flex size-2">
-                    <span className="absolute inline-flex size-full rounded-full bg-accent opacity-40 motion-safe:animate-ping" />
-                    <span className="relative inline-flex size-2 rounded-full bg-accent" />
-                  </span>
+                  <SignalPing />
                   New brief every Friday, 08:00 IST
                 </p>
                 <p className="leading-relaxed">{BRAND.tagline}</p>

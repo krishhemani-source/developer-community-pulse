@@ -75,7 +75,7 @@ export function renderBriefEmail(brief: BriefContent, dashboardUrl: string | nul
   const html = `<!doctype html><html><body style="margin:0;background:#FAF8F4">
   <div style="max-width:640px;margin:0 auto;padding:24px 20px;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:${INK};font-size:15px;line-height:1.5">
     <div style="font-size:15px;font-weight:600;letter-spacing:-0.01em"><span style="color:${ACCENT}">&#9673;</span>&nbsp;Signal<span style="color:${ACCENT}">Forge</span> <span style="color:${MUTED};font-weight:400;font-size:12px">Developer Intelligence</span></div>
-    <div style="color:${ACCENT};font-size:13px;font-weight:600;margin-top:18px">Weekly Intelligence Brief · <span style="color:${INK};font-weight:500">${esc(range)}</span></div>
+    <div style="color:${INK};font-size:13px;font-weight:600;margin-top:18px">Weekly Intelligence Brief · <span style="color:${INK};font-weight:500">${esc(range)}</span></div>
     <p style="font-family:Georgia,serif;font-size:21px;line-height:1.35;margin:10px 0 0">${esc(brief.headline)}</p>
     ${h2("What pain points are surfacing most")}
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${rows}</table>

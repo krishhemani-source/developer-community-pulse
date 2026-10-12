@@ -35,7 +35,7 @@ export default async function AboutPage() {
   return (
     <div className="flex flex-col gap-16">
       <header className="max-w-3xl">
-        <p className="text-sm font-semibold text-accent">How it works</p>
+        <p className="text-sm font-semibold text-muted">How it works</p>
         <h1 className="mt-2 font-serif text-[2.2rem] leading-tight tracking-tight sm:text-[2.6rem]">{BRAND.tagline}</h1>
         <p className="mt-4 text-[17px] leading-relaxed text-muted">
           Sumit is the only PM at a 15-person startup selling code review automation. Every Friday he spent 90 minutes searching developer communities
@@ -51,8 +51,8 @@ export default async function AboutPage() {
       <Block number="01" title="Three questions, answered every week">
         <ol className="grid gap-8 md:grid-cols-3">
           {QUESTIONS.map((x, i) => (
-            <li key={x.q} className="border-t-2 border-accent/70 pt-4">
-              <span className="tabular text-xs font-semibold text-accent">Question {i + 1}</span>
+            <li key={x.q} className="border-t-2 border-ink pt-4">
+              <span className="tabular text-xs font-semibold text-muted">Question {i + 1}</span>
               <h3 className="mt-2 font-serif text-xl leading-snug">{x.q}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{x.a}</p>
               <Link href={x.href} className="mt-3 inline-block text-sm font-medium text-accent hover:underline">
@@ -76,10 +76,10 @@ export default async function AboutPage() {
               <span
                 className={cn(
                   "col-start-2 inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium sm:col-start-auto",
-                  p.who === "ai" ? "bg-accent-soft text-ink" : "border border-rule text-muted",
+                  p.who === "ai" ? "bg-ink text-paper" : "border border-rule text-muted",
                 )}
               >
-                {p.who === "ai" ? <Bot aria-hidden="true" className="size-3.5 text-accent" /> : <Calculator aria-hidden="true" className="size-3.5" />}
+                {p.who === "ai" ? <Bot aria-hidden="true" className="size-3.5" /> : <Calculator aria-hidden="true" className="size-3.5" />}
                 {p.who === "ai" ? "Gemini Flash" : "Code"}
               </span>
               <span className="col-start-2 text-sm leading-relaxed text-muted sm:col-start-auto">{p.what}</span>
@@ -105,7 +105,7 @@ export default async function AboutPage() {
             "If a source or Gemini fails, the run is marked partial and the brief says what is missing.",
           ].map((t) => (
             <li key={t} className="flex gap-2.5">
-              <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-accent" />
+              <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-ink" />
               {t}
             </li>
           ))}
@@ -116,7 +116,7 @@ export default async function AboutPage() {
         <div className="grid gap-10 md:grid-cols-2">
           <div>
             <h3 className="flex items-center gap-2 font-semibold">
-              <Bot aria-hidden="true" className="size-4 text-accent" />
+              <Bot aria-hidden="true" className="size-4" />
               Automated
             </h3>
             <ul className="mt-3 space-y-2 text-sm text-muted">
@@ -167,7 +167,7 @@ export default async function AboutPage() {
 function Block({ number, title, children }: { number: string; title: string; children: React.ReactNode }) {
   return (
     <section aria-labelledby={`about-${number}`} className="border-t border-rule pt-7">
-      <p aria-hidden="true" className="tabular text-xs font-semibold tracking-wide text-accent">
+      <p aria-hidden="true" className="tabular text-xs font-semibold tracking-wide text-muted">
         {number}
       </p>
       <h2 id={`about-${number}`} className="mt-1.5 text-[1.6rem] font-semibold leading-tight tracking-[-0.015em]">

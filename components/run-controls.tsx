@@ -1,9 +1,10 @@
 "use client";
 // "Run now" with live stage progress. Polls /api/runs/[id] every 2 seconds while a run is going.
-import { Loader2, Play } from "lucide-react";
+import { Play } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { runNowAction } from "@/app/actions";
+import { SignalPing } from "./signal-ping";
 import { StageProgress } from "./stage-progress";
 import { useToast } from "./toast";
 import { Button } from "./ui/button";
@@ -61,7 +62,7 @@ export function RunControls({ initialRun }: { initialRun: RunSummary | null }) {
   const busy = pending || run !== null;
 
   return (
-    <div className="flex flex-col items-start gap-2 sm:items-end">
+    <div className="no-print flex flex-col items-start gap-2 sm:items-end">
       <Button
         onClick={() =>
           startTransition(async () => {
@@ -78,7 +79,7 @@ export function RunControls({ initialRun }: { initialRun: RunSummary | null }) {
         disabled={busy}
         aria-describedby={run ? "run-progress" : undefined}
       >
-        {busy ? <Loader2 className="animate-spin" /> : <Play />}
+        {busy ? <SignalPing tone="paper" /> : <Play />}
         {busy ? "Running" : "Run now"}
       </Button>
       {run && (

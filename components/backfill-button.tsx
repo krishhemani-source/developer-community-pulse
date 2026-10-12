@@ -1,9 +1,10 @@
 "use client";
 // "Build 4-week history": processes one past week per request, oldest first, so each request
 // stays inside Vercel's time limit. Shows a progress bar and the live stage of the current week.
-import { History, Loader2 } from "lucide-react";
+import { History } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { SignalPing } from "./signal-ping";
 import { StageProgress } from "./stage-progress";
 import { useToast } from "./toast";
 import { Button } from "./ui/button";
@@ -90,9 +91,9 @@ export function BackfillButton({ variant = "primary" }: { variant?: "primary" | 
   const pct = total ? Math.round((completed / total) * 100) : 0;
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-3">
+    <div className="no-print flex w-full max-w-md flex-col gap-3">
       <Button onClick={build} disabled={running} variant={variant} className="self-start">
-        {running ? <Loader2 className="animate-spin" /> : <History />}
+        {running ? <SignalPing tone={variant === "primary" ? "paper" : "accent"} /> : <History />}
         {running ? "Building history" : "Build 4-week history"}
       </Button>
       {running && (

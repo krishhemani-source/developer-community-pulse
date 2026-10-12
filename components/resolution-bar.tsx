@@ -16,8 +16,10 @@ export function ResolutionBar({ resolution, share }: { resolution: ResolutionCou
   return (
     <span className="flex w-full flex-col gap-1">
       <span className="flex h-2 w-full overflow-hidden rounded-sm bg-rule" aria-hidden="true">
-        <span className="h-full bg-ink" style={{ width: pct(unresolved) }} />
-        <span className="h-full bg-ink/25" style={{ width: pct(resolved) }} />
+        <span className="sf-grow flex h-full w-full">
+          <span className="h-full bg-ink" style={{ width: pct(unresolved) }} />
+          <span className="h-full bg-ink/25" style={{ width: pct(resolved) }} />
+        </span>
       </span>
       <span className="tabular text-xs text-muted">
         <span className="font-medium text-ink">{formatShare(share)}</span> unresolved

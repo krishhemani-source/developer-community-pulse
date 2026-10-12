@@ -7,11 +7,14 @@ export function Sparkline({
   stroke,
   width = 104,
   height = 32,
+  delay = 0,
 }: {
   series: { weekStart: string; count: number }[];
   stroke: string;
   width?: number;
   height?: number;
+  /** Milliseconds before this line starts drawing, to stagger a list. */
+  delay?: number;
 }) {
   const pad = 4;
   const max = Math.max(1, ...series.map((s) => s.count));
@@ -28,11 +31,23 @@ export function Sparkline({
     <span className="inline-block">
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden="true" className="overflow-visible">
         <line x1={pad} x2={width - pad} y1={height - pad} y2={height - pad} stroke="var(--rule)" strokeWidth={1} />
-        {points.length > 1 && <path d={path} fill="none" stroke={stroke} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />}
+        {points.length > 1 && (
+          <path
+            d={path}
+            pathLength={1}
+            className="sf-draw"
+            style={{ animationDelay: `${delay}ms` }}
+            fill="none"
+            stroke={stroke}
+            strokeWidth={2}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        )}
         {points.slice(0, -1).map((p, i) => (
           <circle key={i} cx={p.x} cy={p.y} r={1.75} fill={stroke} opacity={0.55} />
         ))}
-        {last && <circle cx={last.x} cy={last.y} r={3.25} fill={stroke} />}
+        {last && <circle className="sf-fade-in" style={{ animationDelay: `${delay + 750}ms` }} cx={last.x} cy={last.y} r={3.25} fill={stroke} />}
       </svg>
       <span className="sr-only">Mentions by week: {description}</span>
     </span>

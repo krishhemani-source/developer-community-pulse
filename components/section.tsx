@@ -22,7 +22,7 @@ export function BriefSection({
     <section id={id} aria-labelledby={`${id}-heading`} className={cn("scroll-mt-6", className)}>
       <header className="flex flex-col gap-4 border-t border-rule pt-7 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p aria-hidden="true" className="tabular text-xs font-semibold tracking-wide text-accent">
+          <p aria-hidden="true" className="tabular text-xs font-semibold tracking-wide text-muted">
             {String(number).padStart(2, "0")}
           </p>
           <h2 id={`${id}-heading`} className="mt-1.5 text-[1.6rem] font-semibold leading-tight tracking-[-0.015em]">

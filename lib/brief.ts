@@ -116,6 +116,23 @@ export function fallbackHeadline(topics: TopicBrief[]): string {
   return parts.join(" ");
 }
 
+/**
+ * Estimated reading time, to keep the "under 10 minutes" success metric honest:
+ * prose at 238 words a minute (average adult silent reading, Brysbaert 2019) plus about
+ * 6 seconds to scan each topic row and a minute for the charts.
+ */
+export function readingMinutes(brief: Pick<BriefContent, "headline" | "topics" | "underserved" | "objections" | "talkingPoints">): number {
+  const prose = [
+    brief.headline,
+    ...brief.topics.map((t) => t.insight ?? ""),
+    ...brief.underserved.map((u) => u.whyUnresolved),
+    ...brief.objections.map((o) => o.whatDevelopersSay ?? ""),
+    ...brief.talkingPoints,
+  ].join(" ");
+  const words = prose.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 238 + (brief.topics.length * 6) / 60 + 1));
+}
+
 /** Clean markdown for the "Copy for Google Doc" button. Numbers come from code. */
 export function briefToMarkdown(brief: BriefContent, dashboardUrl: string | null): string {
   const lines: string[] = [];

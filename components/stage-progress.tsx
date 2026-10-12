@@ -1,6 +1,7 @@
 // Live stage display: Collecting → Cleaning → Tagging → Measuring → Writing → Verifying → Sending.
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SignalPing } from "./signal-ping";
 
 export const STAGE_LABELS: { key: string; label: string }[] = [
   { key: "collecting", label: "Collecting" },
@@ -37,6 +38,7 @@ export function StageProgress({ stage, showSending = true }: { stage: string; sh
               )}
             >
               {state === "done" && <Check aria-hidden="true" className="size-3" />}
+              {state === "active" && <SignalPing tone="paper" className="size-2" />}
               {s.label}
               {state === "active" && <span className="sr-only"> (in progress)</span>}
             </span>

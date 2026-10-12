@@ -183,9 +183,13 @@ Collect ─▶ Clean ─▶ Tag ─▶ Measure ─▶ Write ─▶ Verify ─▶
 - **Mark:** two concentric signal rings around a central point (`components/brand.tsx`, favicon `app/icon.svg`). The outer ring is broken, like a signal being picked up; the centre point, in electric violet, is the one thing worth acting on.
 - **Tokens:**
   - Warm white `#FAF8F4`, deep ink `#0E1020`, muted `#5F6273`, rule `#E7E3DB`.
-  - Electric violet `#6B45FF` is the only brand accent: the mark, primary actions, active navigation, section numbers and focus rings.
+  - Electric violet `#6B45FF` is the only brand accent, and it is reserved for two meanings: *this is SignalForge* (the mark's centre point, the wordmark) and *you can act here* (primary buttons, the active navigation item, links, focus rings). Section numbers, labels and rules stay ink or grey.
   - Data colour carries meaning only: rising `#C2410C` (warm), falling `#0E7490` (cool), steady muted. Violet is never used for data.
   - A dark mode remaps each token.
+- **Colour rule in one line:** violet means *SignalForge* or *act here*; warm orange and cool teal mean *data moved*; nothing else has colour. All twelve colour pairings pass WCAG AA contrast (4.5:1) in light and dark mode.
+- **Motion with a job, played once.** Sparklines draw left to right, staggered by rank, so the readout reads like a pulse (time reads left to right). Resolution bars grow from zero (the length is the data). The four key numbers count up once with an ease-out curve. A signal ripple runs only while a pipeline run is live, as system status. Toasts rise in over 200ms. There is deliberately no fade-and-slide on page sections. Durations stay between about 200ms for feedback and 900ms for data reveals, and every animation is switched off for people who ask their OS for reduced motion (WCAG 2.3.3). Numbers are rendered on the server, so they are correct before any animation and in print.
+- **Reading time on the brief** ("≈ 3 min read") keeps the *under 10 minutes* success metric visible: prose at 238 words a minute (average adult silent reading, Brysbaert 2019), plus about 6 seconds per topic row and a minute for the charts. Unit-tested.
+- **Shareable output:** "Copy for Google Doc" (markdown) and "Save as PDF" (a print stylesheet that shows only the brief, with every animation in its finished state).
 - **Vocabulary:** the AI report is the **Weekly Intelligence Brief**; the trend section is **Emerging Signals**.
 - **Typefaces:** Inter with tabular figures for everything; Newsreader (serif) only for the headline.
 - **Principles:**

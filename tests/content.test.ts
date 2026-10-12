@@ -41,3 +41,18 @@ describe("isAutomatedIssue", () => {
     }
   });
 });
+
+import { readingMinutes } from "@/lib/brief";
+import type { TopicBrief } from "@/lib/brief";
+
+describe("readingMinutes", () => {
+  const topic = { insight: "word ".repeat(40) } as unknown as TopicBrief;
+  it("estimates prose at 238 wpm plus row scanning and charts, rounded up", () => {
+    // 7 topics x 40 words = 280 words -> 1.18 min; + 7 rows x 6s = 0.7 min; + 1 min charts = 2.88 -> 3
+    expect(readingMinutes({ headline: "", topics: Array(7).fill(topic), underserved: [], objections: [], talkingPoints: [] })).toBe(3);
+  });
+  it("stays well under the 10-minute target for a full brief", () => {
+    const long = { insight: "word ".repeat(60) } as unknown as TopicBrief;
+    expect(readingMinutes({ headline: "word ".repeat(50), topics: Array(7).fill(long), underserved: [], objections: [], talkingPoints: ["word ".repeat(25)] })).toBeLessThan(10);
+  });
+});

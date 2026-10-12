@@ -35,7 +35,7 @@ function PulseRow({ topic: t }: { topic: TopicBrief }) {
   const quiet = t.mentionCount === 0;
 
   return (
-    <li className="py-4">
+    <li className="-mx-3 rounded-lg px-3 py-4 transition-colors hover:bg-ink/[0.025]">
       <div className="grid grid-cols-[2rem_1fr_auto] items-start gap-x-3 gap-y-3 md:grid-cols-[2rem_minmax(0,1fr)_5rem_8.5rem_7rem_9rem] md:items-center">
         <span className="tabular pt-0.5 text-sm text-muted md:pt-0">{t.rank}</span>
 
@@ -60,7 +60,7 @@ function PulseRow({ topic: t }: { topic: TopicBrief }) {
             <DeltaMark label={t.trend} delta={t.delta} pct={t.pct} />
           </div>
           <div>
-            <Sparkline series={t.series} stroke={TONE_STROKE[tone]} />
+            <Sparkline series={t.series} stroke={TONE_STROKE[tone]} delay={(t.rank - 1) * 70} />
           </div>
           <div className="min-w-36 flex-1 md:min-w-0">
             {!quiet && <ResolutionBar resolution={t.resolution} share={t.unresolvedShare} />}
