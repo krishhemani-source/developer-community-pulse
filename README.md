@@ -8,6 +8,10 @@ _The repository, Vercel project and package keep the original working name `deve
 
 > **AI interprets, code counts, nothing unverified reaches Sumit.**
 
+![SignalForge components map](docs/signalforge-components-map.png)
+
+**Live:** https://developer-community-pulse-eight.vercel.app
+
 ---
 
 ## 1. Problem
